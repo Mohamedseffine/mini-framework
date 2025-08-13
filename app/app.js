@@ -20,6 +20,10 @@ function test(kay) {
         render()
     }
 }
+function destroy(todo){
+         todos = todos.filter(item => item != todo) 
+    render()
+}
 
 // Toggle all todos
 function checkall() {
@@ -82,7 +86,10 @@ function TodoApp() {
         // Label must be right after checkbox for CSS
         const label = CreateElement('label', {}, todo.text)
 
-        const destroyButton = CreateElement('button', { class: 'destroy' })
+        const destroyButton = CreateElement('button', { 
+            class: 'destroy',
+            onclick : () => destroy(todo)
+        })
 
         viewDiv.appendChild(toggle)
         viewDiv.appendChild(label)
