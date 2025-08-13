@@ -5,11 +5,16 @@ export function CreateElement(type , attr = {} , ...chidlren) {
         for (let i = 0 ; i < keys.length ; i ++){
             const loopattr = keys[i]
             const value = attr[loopattr]
-            // if (loopattr.startsWith('on') && typeof value === "function"){
-            //      till we add events
-            // }
-            element.setAttribute(loopattr , value)
+             if (loopattr.startsWith("on") && typeof value === "function") {
+            // Event listener (e.g., onClick)
+            element.addEventListener(loopattr.substring(2).toLowerCase(), value);
+             }else{
+                 element.setAttribute(loopattr , value)
+
+             }
         }
+
+
         for (let i = 0 ; i < chidlren.length ; i ++){
             const child = chidlren[i]
             if (typeof child === "string"){
