@@ -1,5 +1,5 @@
 import { CreateElement } from "../framework/framework.js"
-
+let allCompleted = false
 let todos = [
     { id: 1, text: "uwuwuwu hatim uwu", completed: false },
 ]
@@ -13,11 +13,18 @@ function test(kay) {
             completed: false
         }
         todos.push(obj)
+        allCompleted = false
         inputvalue.value = "" // clear input
         render() // re-render after adding
     }
 }
-
+function checkall(){
+    for (let todo of todos) {
+        todo.completed = !allCompleted
+    }
+    allCompleted = !allCompleted
+    render()
+}
 function TodoApp() {
     const app = CreateElement('div', { class: 'todoapp' })
 
@@ -41,7 +48,8 @@ function TodoApp() {
     const toggleAll = CreateElement('input', {
         class: 'toggle-all',
         id: 'toggle-all',
-        type: 'checkbox'
+        type: 'checkbox',
+        "onclick" : () => checkall()
     })
     const toggleAllLabel = CreateElement('label', { for: 'toggle-all' }, 'Mark all as complete')
 
@@ -53,9 +61,13 @@ function TodoApp() {
 
         const viewDiv = CreateElement('div', { class: 'view' })
         const toggle = CreateElement('input', {
-            class: 'toggle',
-            type: 'checkbox',
-            checked: todo.completed
+                 class: 'toggle',
+                 type: 'checkbox',
+                 checked: todo.completed,
+         onclick: () => {
+                todo.completed = !todo.completed;
+                render();
+                }
         })
         const label = CreateElement('label', {}, todo.text)
         const destroyButton = CreateElement('button', { class: 'destroy' })
