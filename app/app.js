@@ -5,6 +5,9 @@ let todos = [
     { id: 1, text: "uwuwuwu hatim uwu", completed: false },
 ]
 
+// "all", "active", "completed"
+let filterState = "all"
+
 // Add todo on Enter key
 function test(kay) {
     let inputvalue = document.getElementById("todo-input")
@@ -20,8 +23,14 @@ function test(kay) {
         render()
     }
 }
+
 function destroy(todo){
-         todos = todos.filter(item => item != todo) 
+    todos = todos.filter(item => item != todo)
+    render()
+}
+
+function setFilter(filter){
+    filterState = filter
     render()
 }
 
@@ -61,13 +70,21 @@ function TodoApp() {
         type: 'checkbox',
         onclick: () => checkall()
     })
-    toggleAll.checked = allCompleted // keep it in sync
+    toggleAll.checked = allCompleted
 
     const toggleAllLabel = CreateElement('label', { for: 'toggle-all' }, 'Mark all as complete')
 
     const todoList = CreateElement('ul', { class: 'todo-list' })
 
-    todos.forEach(todo => {
+    // Apply filter
+    let visibleTodos = todos
+    if(filterState === "active"){
+        visibleTodos = todos.filter(t => !t.completed)
+    } else if(filterState === "completed"){
+        visibleTodos = todos.filter(t => t.completed)
+    }
+
+    visibleTodos.forEach(todo => {
         const todoItem = CreateElement('li', { class: todo.completed ? 'completed' : '' })
 
         const viewDiv = CreateElement('div', { class: 'view' })
@@ -81,11 +98,9 @@ function TodoApp() {
                 render()
             }
         })
-        toggle.checked = todo.completed // important fix
+        toggle.checked = todo.completed
 
-        // Label must be right after checkbox for CSS
         const label = CreateElement('label', {}, todo.text)
-
         const destroyButton = CreateElement('button', { 
             class: 'destroy',
             onclick : () => destroy(todo)
@@ -118,14 +133,27 @@ function TodoApp() {
     todoCount.appendChild(document.createTextNode(' items left'))
 
     const filters = CreateElement('ul', { class: 'filters' })
+
     const allFilter = CreateElement('li')
-    allFilter.appendChild(CreateElement('a', { class: 'selected', href: '#/' }, 'All'))
+    allFilter.appendChild(CreateElement('a', { 
+        class: filterState === "all" ? 'selected' : '',
+        href: '#/',
+        onclick: () => setFilter("all")
+    }, 'All'))
 
-    const activeFilter = CreateElement('li');
-    activeFilter.appendChild(CreateElement('a', { href: '#/active' }, 'Active'))
+    const activeFilter = CreateElement('li')
+    activeFilter.appendChild(CreateElement('a', { 
+        class: filterState === "active" ? 'selected' : '',
+        href: '#/active',
+        onclick: () => setFilter("active")
+    }, 'Active'))
 
-    const completedFilter = CreateElement('li');
-    completedFilter.appendChild(CreateElement('a', { href: '#/completed' }, 'Completed'))
+    const completedFilter = CreateElement('li')
+    completedFilter.appendChild(CreateElement('a', { 
+        class: filterState === "completed" ? 'selected' : '',
+        href: '#/completed',
+        onclick: () => setFilter("completed")
+    }, 'Completed'))
 
     filters.appendChild(allFilter)
     filters.appendChild(activeFilter)
