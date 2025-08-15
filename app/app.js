@@ -11,28 +11,49 @@ let todos = [
 let filterState = "all"
 function editlabel(todo, liElement) {
     liElement.classList.add("editing");
+    const backup = todo.text;
 
     const input = liElement.querySelector(".edit");
+    input.value = backup;
     input.focus();
     input.setSelectionRange(input.value.length, input.value.length);
 
+    let committed = false; // prevents blur from cancelling after a save
+
     const save = () => {
+        if (committed) return;
+        committed = true;
         const newValue = input.value.trim();
         if (newValue) {
             todo.text = newValue;
         } else {
-            // Empty input means delete the todo
+            // empty => delete
             todos = todos.filter(t => t !== todo);
         }
         render();
     };
 
-    input.onkeydown = (e) => {
-        if (e.key === "Enter") save();
-        if (e.key === "Escape") render(); // Cancel edit
+    const cancel = () => {
+        if (committed) return;
+        committed = true;
+        todo.text = backup;
+        render();
     };
-    input.onblur = save;
+
+    input.onkeydown = (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            save();
+        } else if (e.key === "Escape") {
+            e.preventDefault();
+            cancel();
+        }
+    };
+
+    // Clicking elsewhere restores backup (unless we've already saved)
+    input.onblur = () => cancel();
 }
+
 
 // Add todo on Enter key
 function test(kay) {
