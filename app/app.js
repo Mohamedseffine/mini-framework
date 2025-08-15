@@ -3,10 +3,36 @@ import { CreateElement } from "../framework/framework.js"
 let allCompleted = false
 let todos = [
     { id: 1, text: "uwuwuwu hatim uwu", completed: false },
+    { id: 2, text: "test2", completed: false },
+    { id: 3, text: "test3", completed: false },
 ]
 
 // "all", "active", "completed"
 let filterState = "all"
+function editlabel(todo, liElement) {
+    liElement.classList.add("editing");
+
+    const input = liElement.querySelector(".edit");
+    input.focus();
+    input.setSelectionRange(input.value.length, input.value.length);
+
+    const save = () => {
+        const newValue = input.value.trim();
+        if (newValue) {
+            todo.text = newValue;
+        } else {
+            // Empty input means delete the todo
+            todos = todos.filter(t => t !== todo);
+        }
+        render();
+    };
+
+    input.onkeydown = (e) => {
+        if (e.key === "Enter") save();
+        if (e.key === "Escape") render(); // Cancel edit
+    };
+    input.onblur = save;
+}
 
 // Add todo on Enter key
 function test(kay) {
@@ -100,7 +126,10 @@ function TodoApp() {
         })
         toggle.checked = todo.completed
 
-        const label = CreateElement('label', {}, todo.text)
+       const label = CreateElement('label', {
+    ondblclick : () => editlabel(todo, todoItem)
+}, todo.text)
+
         const destroyButton = CreateElement('button', { 
             class: 'destroy',
             onclick : () => destroy(todo)
