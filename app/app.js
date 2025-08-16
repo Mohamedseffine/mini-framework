@@ -72,7 +72,7 @@ function test(kay) {
 }
 
 function destroy(todo){
-    todos = todos.filter(item => item != todo)
+    todos = todos.filter(item => item != todo) 
     render()
 }
 
@@ -176,7 +176,9 @@ function TodoApp() {
     app.appendChild(main)
 
     // Footer
-    const footer = CreateElement('footer', { class: 'footer' })
+    const footer = CreateElement('footer', 
+        { class: 'footer' }
+    )
     const todoCount = CreateElement('span', { class: 'todo-count' })
     const strong = CreateElement('strong', {}, todos.filter(t => !t.completed).length.toString())
     todoCount.appendChild(strong);
@@ -220,13 +222,17 @@ function TodoApp() {
     footer.appendChild(todoCount)
     footer.appendChild(filters)
     footer.appendChild(clearCompleted)
-    app.appendChild(footer)
+    if (todos.length > 0 ){
+        app.appendChild(footer)
+
+    }
 
     return app
 }
 
 // Render function
 function render() {
+
     allCompleted = todos.length > 0 && todos.every(t => t.completed)
     const root = document.getElementById('root')
     root.innerHTML = ""
