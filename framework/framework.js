@@ -4,7 +4,10 @@ export function setRoot(id) {
   if (id === null) {
     return;
   }
-  let element = document.getElementById(id);
+  if (typeof id !== 'string' &&  typeof id !== 'number') {
+    throw new Error(`there is no element with the id :${id}`);
+  }
+  let element = document.getElementById(`${id}`);
   if (element === null) {
     throw new Error(`there is no element with the id :${id}`);
   }
