@@ -321,4 +321,4 @@ if (hash === 'active') {
     appState.filter = FILTERS.COMPLETED;
 }
 
-app.mount(document.getElementById('root'));
+app.Fmount(document.getElementById('root'));

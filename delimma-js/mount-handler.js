@@ -1,5 +1,5 @@
-import { FsetAttributes } from "./attr-handler";
-import { FaddEventlistners } from "./events-handler"
+import { FsetAttributes } from "./attr-handler.js";
+import { FaddEventlistners } from "./events-handler.js"
 
 export function FmountDOM(vdom, parentEl) {
     switch (vdom.type) {

@@ -1,7 +1,7 @@
 import { FmountDOM } from './mount-handler.js'
 import { FdestroyDOM } from './destroy-dom-handler.js'
 import { FsetAttributes } from './attr-handler.js'
-import { FaddEventListeners, FremoveEventListeners} from './events-handler.js'
+import { FaddEventlistners, FremoveEventlistneres} from './events-handler.js'
 
 export function FpatchDOM(oldVdom, newVdom, parentEl) {
     if (!oldVdom) {
@@ -51,10 +51,10 @@ function FpatchElement(oldVdom, newVdom) {
     FpatchAttributes(oldVdom.props, newVdom.props, el);
 
     if (oldVdom.listeners) {
-        FremoveEventListeners(oldVdom.listeners, el);
+        FremoveEventlistneres(oldVdom.listeners, el);
     }
     const { on: events} = newVdom.props;
-    newVdom.listeners = FaddEventListeners(events, el);
+    newVdom.listeners = FaddEventlistners(events, el);
 
     FpatchChildren(oldVdom.children, newVdom.children, el);
 }

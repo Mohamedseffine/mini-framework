@@ -10,13 +10,13 @@ export function FdestroyDOM(vdom) {
             if (vdom.listeners) {
                 FremoveEventlistneres(vdom.listeners, vdom.el);
             }
-            vdom.children.forEach(destroyDOM);
+            vdom.children.forEach(FdestroyDOM);
             if (vdom.el && vdom.el.parentNode) {
                 vdom.el.remove();
             }
             break;
         case "fragment":
-            vdom.children.forEach(destroyDOM);
+            vdom.children.forEach(FdestroyDOM);
             break;
         default:
             throw new Error(`Can't destroy DOM of type: ${vdom.type}`);
