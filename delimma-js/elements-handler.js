@@ -24,7 +24,7 @@ export function FcreateElementFragment(vNodes) {
 function mapTextNodes(children) {
     return children.map((child) => {
         if (typeof child === 'string') {
-            return CreateElementText(child)
+            return FcreateElementText(child)
         } else {
             return child
         }
