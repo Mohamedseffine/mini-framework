@@ -1,4 +1,4 @@
-export function addEventListeners(listeners = {}, el) {
+export function FaddEventlistners(listeners = {}, el) {
     const addedListeners = {};
     Object.entries(listeners).forEach(([eventName, handler]) => {
         const property = 'on' + eventName;
@@ -8,7 +8,7 @@ export function addEventListeners(listeners = {}, el) {
     return addedListeners;
 }
 
-export function removeEventListeners(listeners = {}, el) {
+export function FremoveEventlistneres(listeners = {}, el) {
     Object.keys(listeners).forEach(eventName => {
         const property = 'on' + eventName;
         el[property] = null;
