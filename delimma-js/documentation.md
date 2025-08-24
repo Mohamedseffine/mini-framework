@@ -1,74 +1,74 @@
-# MiniFramework Documentation
+# Mini Framework
 
-A lightweight, reactive JavaScript framework with **Virtual DOM**, **State Management**, and **Client-Side Routing** for building modern web applications.
-
----
-
-## 🌟 Features
-
-- **Virtual DOM**: Fast and efficient DOM updates through intelligent diffing.
-- **State Management**: Simple, predictable state updates using a reducer-based approach.
-- **Event System**: Automatic event binding and cleanup to prevent memory leaks.
-- **Routing**: Hash-based navigation for seamless single-page app experiences.
-- **Focus Preservation**: Maintains input focus and cursor position during updates for better UX.
+A lightweight, reactive JavaScript framework with **virtual DOM**, **state management**, and **routing**.
 
 ---
 
-## 🚀 Getting Started
+## ✨ Features
 
-Set up a basic app with state, view, and reducers, then mount it to the DOM.
+- **Virtual DOM** – Efficient DOM updates through diffing  
+- **State Management** – Redux-like reducers and actions  
+- **Event Handling** – Automatic event cleanup  
+- **Routing** – Hash-based navigation  
+- **Focus Management** – Preserves input state during updates  
+
+---
+
+## 🚀 Quick Start
 
 ```javascript
-import { initApp } from './miniframework/core.js';
-import { h } from './miniframework/vdom.js';
+import { createApp } from './delimma-js/app.js';
+import { FcreateElement } from './delimma-js/h.js';
 
-const app = initApp({
-    state: { counter: 0 },
-    view: (state, dispatch) => 
-        h('div', { class: 'app-container' }, [
-            h('p', {}, `Counter: ${state.counter}`),
-            h('button', {
-                on: { click: () => dispatch('increment') }
-            }, 'Add')
+const app = FcreateApp({
+    state: { count: 0 },
+    view: (state, Femit) => 
+        FcreateElement('div', {}, [
+            FcreateElement('p', {}, [`Count: ${state.count}`]),
+            FcreateElement('button', {
+                on: { click: () => Femit('increment') }
+            }, ['Increment'])
         ]),
     reducers: {
-        increment: (state) => ({ ...state, counter: state.counter + 1 })
+        increment: (state) => ({ ...state, count: state.count + 1 })
     }
 });
 
-app.mount(document.querySelector('#root'));
+app.Fmount(document.getElementById('app'));
 ```
 
 ---
 
-## 📚 API Overview
+## 📖 API Reference
 
 ### Creating Elements
 
-Use the `h` function to create virtual DOM elements with tags, attributes, and children.
-
 ```javascript
 // Basic element
-h('h1', {}, 'Hello, MiniFramework!')
+FcreateElement('h1', {}, ['Hello World'])
 
-// Element with attributes and events
-h('input', {
-    class: 'text-input',
+// With attributes and events
+FcreateElement('input', {
+    class: 'form-input',
     type: 'text',
-    placeholder: 'Enter your text...',
+    placeholder: 'Enter text...',
     on: {
-        input: (e) => dispatch('updateInput', e.target.value),
-        keypress: (e) => e.key === 'Enter' && dispatch('submit')
+        input: (e) => Femit('textChanged', e.target.value),
+        keypress: (e) => {
+            if (e.key === 'Enter') {
+                Femit('submitForm');
+            }
+        }
     }
 })
 
 // Nested elements
-h('div', { class: 'panel' }, [
-    h('h2', {}, 'Section Title'),
-    h('p', {}, 'Some content here'),
-    h('button', {
-        on: { click: () => dispatch('triggerAction') }
-    }, 'Click Me')
+FcreateElement('div', { class: 'card' }, [
+    FcreateElement('h2', {}, ['Title']),
+    FcreateElement('p', {}, ['Content']),
+    FcreateElement('button', {
+        on: { click: () => Femit('cardAction') }
+    }, ['Action'])
 ])
 ```
 
@@ -76,29 +76,27 @@ h('div', { class: 'panel' }, [
 
 ### State Management
 
-Define reducers to handle state updates in a predictable, immutable way.
-
 ```javascript
 const reducers = {
-    // Update a single value
-    setInput: (state, value) => ({ ...state, input: value }),
-
-    // Add a task
-    addTask: (state) => ({
+    // Simple update
+    updateName: (state, name) => ({ ...state, name }),
+    
+    // Complex update
+    addTodo: (state) => ({
         ...state,
-        tasks: [...state.tasks, {
+        todos: [...state.todos, {
             id: Date.now(),
-            text: state.input,
-            done: false
+            text: state.newTodo,
+            completed: false
         }],
-        input: ''
+        newTodo: ''
     }),
-
-    // Toggle task completion
-    toggleTask: (state, id) => ({
+    
+    // Conditional update
+    toggleTodo: (state, id) => ({
         ...state,
-        tasks: state.tasks.map(task =>
-            task.id === id ? { ...task, done: !task.done } : task
+        todos: state.todos.map(todo =>
+            todo.id === id ? { ...todo, completed: !todo.completed } : todo
         )
     })
 };
@@ -108,29 +106,29 @@ const reducers = {
 
 ### View Function
 
-The `view` function defines the UI structure based on the current state and supports action dispatching.
-
 ```javascript
-function view(state, dispatch, navigate) {
-    const { tasks, input } = state;
-
-    return h('div', { class: 'task-app' }, [
-        h('h1', {}, 'Task Manager'),
-        h('input', {
-            placeholder: 'Add a task...',
-            value: input,
+function view(state, Femit, navigate) {
+    const { todos, filter } = state;
+    
+    return FcreateElement('div', { class: 'app' }, [
+        FcreateElement('h1', {}, ['Todo App']),
+        
+        FcreateElement('input', {
+            placeholder: 'Add todo...',
+            value: state.newTodo,
             on: {
-                input: (e) => dispatch('setInput', e.target.value),
-                keypress: (e) => e.key === 'Enter' && dispatch('addTask')
+                input: e => Femit('updateNewTodo', e.target.value),
+                keypress: e => e.key === 'Enter' && Femit('addTodo')
             }
         }),
-        h('ul', { class: 'task-list' }, 
-            tasks.map(task =>
-                h('li', { class: task.done ? 'done' : '' }, [
-                    h('span', {}, task.text),
-                    h('button', {
-                        on: { click: () => dispatch('toggleTask', task.id) }
-                    }, task.done ? 'Undo' : 'Complete')
+        
+        FcreateElement('ul', {},
+            todos.map(todo =>
+                FcreateElement('li', {}, [
+                    FcreateElement('span', {}, [todo.text]),
+                    FcreateElement('button', {
+                        on: { click: () => Femit('toggleTodo', todo.id) }
+                    }, [todo.completed ? 'Undo' : 'Complete'])
                 ])
             )
         )
@@ -140,50 +138,57 @@ function view(state, dispatch, navigate) {
 
 ---
 
-## 🛠️ How It Works
+## ⚙️ How It Works
 
-### Virtual DOM Workflow
-1. **Action Trigger**: `dispatch('action', payload)` calls a reducer.
-2. **State Update**: Reducer returns a new immutable state.
-3. **Render**: View function generates a new virtual DOM tree.
-4. **Diffing**: Compares old and new virtual DOM for changes.
-5. **Patching**: Applies minimal updates to the real DOM.
+### Virtual DOM Flow
+1. **State Change** → `Femit('action', payload)` triggers reducer  
+2. **New State** → Reducer returns updated state  
+3. **Re-render** → View function generates new virtual DOM  
+4. **Diffing** → Framework compares old vs new virtual trees  
+5. **Patching** → Only changed elements are updated in real DOM  
 
-### Architecture Principles
-- **Unidirectional Data Flow**: State drives the view, actions update the state.
-- **Pure Reducers**: Ensure predictable and testable state changes.
-- **Optimized Rendering**: Reduces DOM operations for better performance.
-- **Memory Safety**: Automatically unbinds events to prevent leaks.
+### Architecture
+- **Unidirectional Data Flow** → State → View → Actions → State  
+- **Pure Functions** → Reducers are predictable and testable  
+- **Efficient Updates** → Smart diffing minimizes DOM operations  
+- **Memory Safe** → Automatic cleanup prevents memory leaks  
 
-### Event Handling
-Events are managed efficiently with automatic cleanup:
+### Event System
+
+Framework manages event binding & cleanup:
 
 ```javascript
-element.addEventListener('click', handler); // Added on mount
-element.removeEventListener('click', handler); // Removed on unmount
+element.onclick = handler;  // Added during mount
+element.onclick = null;     // Removed during unmount
 ```
 
 ### Focus Preservation
-The framework ensures input fields retain focus and cursor position during updates, enhancing form usability.
+
+The framework **maintains input focus and cursor position** during updates, making forms responsive and natural.
 
 ---
 
-## ⚡ Performance Highlights
-- **Minimal DOM Updates**: Only modified elements are touched.
-- **Batched State Changes**: Groups multiple updates into a single render.
-- **Render Guards**: Prevents unnecessary re-renders.
-- **Efficient Diffing**: Optimizes comparisons with type checks and early exits.
+## ⚡ Performance Features
+
+- **Minimal DOM Operations** – Only necessary changes are applied  
+- **Batched Updates** – Multiple state changes render once  
+- **Smart Re-rendering** – Guards prevent concurrent renders  
+- **Efficient Diffing** – Type checking and bailouts optimize performance  
 
 ---
 
-## 📝 Example: Task Manager
-The Task Manager demo illustrates:
-- Dynamic task list rendering.
-- Form input handling with validation.
-- State management for task creation and completion.
-- Hash-based routing for view navigation.
-- Inline editing with focus preservation.
+## 📝 Example: TodoMVC
+
+The included **TodoMVC** demo shows:
+
+- Complex state management  
+- Dynamic list rendering  
+- Form handling & validation  
+- Routing between views  
+- Inline editing with focus management  
 
 ---
 
-Developed by **Mohamed Seffine** and **Hatim Tahiri**
+Perfect for building **modern web apps** without the complexity of larger frameworks 🚀
+
+Devolopped by **Mohamed Seffine** and **Hatim Tahiri**
