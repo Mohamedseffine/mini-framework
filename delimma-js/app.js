@@ -5,7 +5,7 @@ import { FpatchDOM } from "./diffing-algo.js";
 export function FcreateApp({ state, view, reducers = {} }) {
     let parentEl = null;
     let vdom = null;
-    //to prevent recursive calls
+    //to prevent limitless recursive calls
     let isRendering = false;
     const eventHandlers = new Map();
     // Array of functions to run after each change in the states will be used to trigger Re-rendering
