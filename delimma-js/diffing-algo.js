@@ -3,6 +3,9 @@ import { FdestroyDOM } from './destroy-dom-handler.js'
 import { FsetAttributes } from './attr-handler.js'
 import { FaddEventlistners, FremoveEventlistneres} from './events-handler.js'
 
+//this function efficiently updates the real DOM by comparing
+//the old virtual DOM with the new virtual DOM
+//and only making the minimum necessary changes. 
 export function FpatchDOM(oldVdom, newVdom, parentEl) {
     if (!oldVdom) {
         FmountDOM(newVdom, parentEl);
@@ -14,6 +17,7 @@ export function FpatchDOM(oldVdom, newVdom, parentEl) {
         return;
     }
 
+    
     if (oldVdom.type !== newVdom.type) {
         const nextSibling = oldVdom.el.nextSibling;
         FdestroyDOM(oldVdom);
@@ -45,6 +49,7 @@ function FpatchText(oldVdom, newVdom) {
     }
 }
 
+//compares two elements to applicate the most minimal changes
 function FpatchElement(oldVdom, newVdom) {
     const el = oldVdom.el;
 
@@ -63,6 +68,7 @@ function FpatchFragment(oldVdom, newVdom) {
     FpatchChildren(oldVdom.children, newVdom.children, oldVdom.el);
 }
 
+//compares the children of two elements of the same type to applicate the most minimal changes
 function FpatchChildren(oldChildren, newChildren, parentEl) {
     const maxLength = Math.max(oldChildren.length, newChildren.length);
 
@@ -80,6 +86,8 @@ function FpatchChildren(oldChildren, newChildren, parentEl) {
     }
 }
 
+
+//compares the attributes of two elements of the same type to minimalise changes 
 function FpatchAttributes(oldProps, newProps, el) {
     const { on: oldEvents, ...oldAttrs } = oldProps;
     const { on: newEvents, ...newAttrs } = newProps;

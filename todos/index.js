@@ -2,6 +2,8 @@ import {FcreateElement, FcreateElementFragment} from "../delimma-js/elements-han
 import { FcreateApp } from '../delimma-js/app.js';
 
 
+
+//setting the general app state
 const FILTERS = {
     ALL: 'all',
     ACTIVE: 'active',
@@ -16,6 +18,8 @@ let appState = {
     editingText: ''
 };
 
+
+// setting the states handlers/reducers
 const reducers = {
     updateNewTodo: (state, value) => ({ ...state, newTodo: value }),
 
@@ -132,6 +136,8 @@ const reducers = {
     }
 };
 
+
+//creates the ui of the app
 function view(state, emit, navigate) {
     const { todos, newTodo, filter, editingId, editingText } = state;
 
@@ -314,6 +320,7 @@ const app = FcreateApp({
     reducers
 });
 
+//setting the filter
 const hash = window.location.hash.slice(2);
 if (hash === 'active') {
     appState.filter = FILTERS.ACTIVE;
@@ -321,4 +328,6 @@ if (hash === 'active') {
     appState.filter = FILTERS.COMPLETED;
 }
 
+
+//setting the parent element
 app.Fmount(document.getElementById('root'));

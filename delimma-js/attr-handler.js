@@ -1,3 +1,5 @@
+
+// sets the attributes of an html element
 export function FsetAttributes(el, attrs) {
     const { class: className, style, dataset, ...otherAttrs } = attrs;
 

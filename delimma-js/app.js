@@ -5,10 +5,13 @@ import { FpatchDOM } from "./diffing-algo.js";
 export function FcreateApp({ state, view, reducers = {} }) {
     let parentEl = null;
     let vdom = null;
+    //to prevent recursive calls
     let isRendering = false;
     const eventHandlers = new Map();
+    // Array of functions to run after each change in the states will be used to trigger Re-rendering
     const afterRenderHandlers = [];
 
+    //applicate the changes of the states (only the global states will be handled app-centric state management)
     function Femit(eventName, payload) {
         try {
             if (eventHandlers.has(eventName)) {
@@ -16,15 +19,15 @@ export function FcreateApp({ state, view, reducers = {} }) {
                     handler(payload);
                 });
             }
-
+            //Re-renders the ui after every change in the states
             afterRenderHandlers.forEach((handler) => {
-                handler(eventName, payload);
+                handler();
             });
         } catch (error) {
             console.error(`Error sending event${eventName}:`, error);
         }
     }
-
+    //add the app state handlers/reducers to the event handlers map
     for (const actionName in reducers) {
         const reducer = reducers[actionName];
 
@@ -35,10 +38,12 @@ export function FcreateApp({ state, view, reducers = {} }) {
             state = reducer(state, payload);
         });
     }
+    // to trigger the Re-rendering after every change in the state
     afterRenderHandlers.push(() => {
         FrenderApp();
     });
 
+    //to handle the change in the window history 
     function FhandlePopState() {
         const path = window.location.hash.slice(1) || "/";
         Femit("routeChange", path);
@@ -48,6 +53,7 @@ export function FcreateApp({ state, view, reducers = {} }) {
         window.location.hash = path === "/" ? "" : path;
     }
 
+    // renders the app and calls the functions that handles the diffing logic
     function FrenderApp() {
         if (isRendering) return;
         isRendering = true;
@@ -64,13 +70,15 @@ export function FcreateApp({ state, view, reducers = {} }) {
         const elementClass = isInput ? activeElement.className : null;
         const elementId =
             isInput && activeElement.dataset ? activeElement.dataset.todoId : null;
-
+        
+        //extract the new virtual dom from the view function
         const newVdom = view(state, Femit, navigate);
         if (vdom) {
             FpatchDOM(vdom, newVdom, parentEl);
         } else {
             FmountDOM(newVdom, parentEl);
         }
+        //constantly updating the vdom when rendering
         vdom = newVdom;
         if (isInput && elementClass) {
             let targetInput = null;
@@ -108,7 +116,7 @@ export function FcreateApp({ state, view, reducers = {} }) {
                 }
             }, 0);
         }
-
+        //to applicate rerendering
         isRendering = false;
     }
 

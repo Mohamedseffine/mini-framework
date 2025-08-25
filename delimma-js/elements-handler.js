@@ -1,3 +1,5 @@
+
+//creating an object for each element to insert in virtual dom
 export function FcreateElement(tag, props = {}, children = []) {
     return {
         tag,
@@ -7,6 +9,7 @@ export function FcreateElement(tag, props = {}, children = []) {
     }
 }
 
+//creating an object for each textelement to insert in virtual dom
 export function FcreateElementText(str) {
     return {
         type: "text",
@@ -14,6 +17,8 @@ export function FcreateElementText(str) {
     }
 }
 
+
+//creating an object for each fragment to insert in virtual dom
 export function FcreateElementFragment(vNodes) {
     return {
         type: "fragment",

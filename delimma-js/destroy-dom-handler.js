@@ -1,4 +1,6 @@
 import { FremoveEventlistneres } from "./events-handler.js";
+
+//to remeve vdom elements recursively
 export function FdestroyDOM(vdom) {
     switch (vdom.type) {
         case "text":
