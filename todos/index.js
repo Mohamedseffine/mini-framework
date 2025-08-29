@@ -154,7 +154,7 @@ function view(state, emit, navigate) {
     const allCompleted = todos.length > 0 && activeTodoCount === 0;
 
     return FcreateElementFragment([
-        FcreateElement('header', { class: 'header' }, [
+        FcreateElement('header', { class: 'header', "data-testid":"header" }, [
             FcreateElement('h1', {}, ['todos']),
             FcreateElement('div', { class: 'input-container' }, [
                 FcreateElement('input', {
@@ -164,6 +164,7 @@ function view(state, emit, navigate) {
                     maxlength: 60,
                     value: newTodo,
                     type: 'text',
+                    "data-testid":"text-input",
                     on: {
                         input: e => emit('updateNewTodo', e.target.value),
                         keypress: e => {
@@ -181,12 +182,13 @@ function view(state, emit, navigate) {
             ])
         ]),
 
-        todos.length > 0 ? FcreateElement('main', { class: 'main' }, [
+        todos.length > 0 ? FcreateElement('main', { class: 'main', "data-testid":"main" }, [
             FcreateElement('div', {class: 'toggle-all-container'}, [
                 FcreateElement('input', {
                     class: 'toggle-all',
                     type: 'checkbox',
                     id: 'toggle-all',
+                    "data-testid":"toggle-all",
                     checked: allCompleted,
                     on: { change: () => emit('toggleAll') }
                 }),
@@ -202,7 +204,7 @@ function view(state, emit, navigate) {
                 }, ['Mark all as complete'])
             ]),
 
-            FcreateElement('ul', { class: 'todo-list' },
+            FcreateElement('ul', { class: 'todo-list', "data-testid":"todo-list" },
                 filteredTodos.map(todo => {
                     const isEditing = editingId === todo.id;
                     const todoClass = [
@@ -210,16 +212,18 @@ function view(state, emit, navigate) {
                         isEditing ? 'editing' : ''
                     ].filter(Boolean).join(' ');
 
-                    return FcreateElement('li', { class: todoClass }, [
+                    return FcreateElement('li', { class: todoClass, "data-testid":"todo-item" }, [
                         FcreateElement('div', { class: 'view' }, [
                             FcreateElement('input', {
                                 class: 'toggle',
                                 type: 'checkbox',
+                                'data-testid':"todo-item-toggle",
                                 'data-todo-id': todo.id.toString(),
                                 checked: todo.completed,
                                 on: { change: () => emit('toggleTodo', todo.id) }
                             }),
                             FcreateElement('label', {
+                                "data-testid":"todo-item-label",
                                 on: {
                                     dblclick: () => emit('startEditing', {
                                         id: todo.id,
@@ -229,6 +233,7 @@ function view(state, emit, navigate) {
                             }, [todo.text]),
                             FcreateElement('button', {
                                 class: 'destroy',
+                                "data-testid":"todo-item-button",
                                 on: { click: () => emit('deleteTodo', todo.id) }
                             })
                         ]),
@@ -260,7 +265,7 @@ function view(state, emit, navigate) {
                 ` ${activeTodoCount === 1 ? 'item' : 'items'} left`
             ]),
 
-            FcreateElement('ul', { class: 'filters' }, [
+            FcreateElement('ul', { class: 'filters', "data-testid":"footer-navigation" }, [
                 FcreateElement('li', {}, [
                     FcreateElement('a', {
                         class: filter === FILTERS.ALL ? 'selected' : '',
