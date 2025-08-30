@@ -80,30 +80,6 @@ export function FcreateApp({ state, view, reducers = {} }) {
         }
         //constantly updating the vdom when rendering
         vdom = newVdom;
-        if (isInput && elementClass) {
-            let targetInput = null;
-
-            if (isEditingInput && elementId) {
-                targetInput = parentEl.querySelector(
-                    `input.edit[data-todo-id="${elementId}"]`
-                );
-            } else if (isToggleInput && elementId) {
-                targetInput = parentEl.querySelector(
-                    `input.toggle[data-todo-id="${elementId}"]`
-                );
-            } else if (!isEditingInput && !isToggleInput) {
-                targetInput = parentEl.querySelector(
-                    `input.${elementClass.replace(/\s+/g, ".")}`
-                );
-            }
-
-            if (targetInput) {
-                targetInput.focus();
-                if (cursorPos !== null && cursorEnd !== null) {
-                    targetInput.setSelectionRange(cursorPos, cursorEnd);
-                }
-            }
-        }
 
         if (state.editingId && !isEditingInput) {
             setTimeout(() => {

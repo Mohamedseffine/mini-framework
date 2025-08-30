@@ -240,14 +240,13 @@ function view(state, emit, navigate) {
 
                         isEditing ? FcreateElement('input', {
                             class: 'edit',
-                            maxlength: 60,
                             value: editingText,
                             'data-todo-id': todo.id.toString(),
                             on: {
                                 input: e => emit('updateEditingText', e.target.value),
                                 blur: e => { emit('cancelEdit') },
                                 keypress: e => {
-                                    if (e.key === 'Enter' && e.target.value.trim().length >= 2) {
+                                    if (e.key === 'Enter' && e.target.value.trim().length >= 0) {
                                         e.preventDefault();
                                         emit('saveEdit');
                                     }
